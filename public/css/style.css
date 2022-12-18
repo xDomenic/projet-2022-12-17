@@ -3768,3 +3768,7 @@ label {
 .logo-50 {
     height: 50px;
 }
+
+.hidden {
+    display:  none;
+}

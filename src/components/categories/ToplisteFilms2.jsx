@@ -3,13 +3,17 @@ import React, { useEffect, useState } from "react";
 // import $ from "jquery";
 import Genres from "../../data/genre.json";
 import { getMoviesByCat } from "../accueil/FilmsService";
+import Pagination from "../Pagination";
 
 const imgPath = "https://image.tmdb.org/t/p/original";
 const ToplisteFilms2 = ({ selected }) => {
+  const [totalPages, settotalPages] = useState(0);
+  const [page, setcurrentPage] = useState(1);
   const [items, setItems] = useState([]);
   useEffect(() => {
     const getData = async () => {
-      const getMoviesCatList = await getMoviesByCat(selected);
+      const { data: getMoviesCatList, total_pages } = await getMoviesByCat(selected, page);
+      settotalPages(total_pages)
 
       const MoviesByCatFormated = getMoviesCatList.map((e) => {
         return {
@@ -31,7 +35,7 @@ const ToplisteFilms2 = ({ selected }) => {
     };
 
     getData();
-  }, [selected]);
+  }, [selected, page]);
 
   return (
     <section
@@ -98,35 +102,10 @@ const ToplisteFilms2 = ({ selected }) => {
           )}
         </div>
       </div>
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-lg-8"></div>
-        </div>
-        <div className="row movie-item-row">
-          <div className="custom-col-"></div>
-          <div className="pagination-wrap  mt-60">
-            <nav>
-              <ul>
-                <li className="active">
-                  <a href="/#">1</a>
-                </li>
-                <li>
-                  <a href="/#">2</a>
-                </li>
-                <li>
-                  <a href="/#">3</a>
-                </li>
-                <li>
-                  <a href="/#">4</a>
-                </li>
-                <li>
-                  <a href="/#">Suivant</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </div>
+      {items?.length && <Pagination totalPages={totalPages} currentPage={page} onSelect={(pageSelected) => {
+        setcurrentPage(pageSelected)
+      }} />}
+
     </section>
   );
 };

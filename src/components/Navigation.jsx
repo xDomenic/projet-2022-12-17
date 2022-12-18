@@ -1,6 +1,8 @@
-import React, { useEffect } from "react";
 import $ from "jquery";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 const Navigation = () => {
+  const location = useLocation();
   useEffect(() => {
     /*=============================================
       =    		Mobile Menu			      =
@@ -61,6 +63,14 @@ const Navigation = () => {
       });
     }
   }, []);
+
+
+  const nav_items = [
+    { pageName: "Accueil", pagePath: "/" },
+    { pageName: "Categories", pagePath: "/Categories" },
+    { pageName: "Recherche", pagePath: "/Recherche" },
+    { pageName: "À propos", pagePath: "/contact" },
+  ]
   return (
     <header className="header-style-two">
       <div className="header-top-wrap">
@@ -117,18 +127,10 @@ const Navigation = () => {
                   </div>
                   <div className="navbar-wrap main-menu d-none d-lg-flex">
                     <ul className="navigation">
-                      <li className="active menu-item-has-children">
-                        <a href="/">Accueil</a>
-                      </li>
-                      <li>
-                        <a href="/Categories">Categories</a>
-                      </li>
-                      <li>
-                        <a href="/Recherche">Recherche</a>
-                      </li>
-                      <li>
-                        <a href="/contact">À propos</a>
-                      </li>
+                      {nav_items.map((navItem) => <li className={`${location?.pathname === navItem?.pagePath ? "active" : ""}`}>
+                        <a href={navItem?.pagePath}>{navItem?.pageName}</a>
+                      </li>)}
+
                     </ul>
                   </div>
                   <div className="header-action d-none d-md-block">

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import getPopMovies, { getMoviesByCat } from "./FilmsService";
+import getPopMovies from "./FilmsService";
 
 const imgPath = "https://image.tmdb.org/t/p/original";
 
@@ -9,21 +8,10 @@ const TopListeFilms = ({ selected }) => {
   const [items, setItems] = useState([]);
   const [ogItems, setOgItems] = useState([]);
   const history = useHistory();
-  const filterItem = (categItem) => {
-    const updateItems = Menu.filter((curElem) => {
-      return curElem.category === categItem;
-    });
-    setItems(updateItems);
-  };
-  console.log({ otherSelected: selected });
+
   useEffect(() => {
     const getData = async () => {
       const popMoviesList = await getPopMovies();
-      const getMoviesCatList = await getMoviesByCat(selected);
-
-      console.log("cat", getMoviesCatList);
-      console.log("Pop movies completed", popMoviesList);
-
       const popMoviesListFormated = popMoviesList
         .filter((e) => {
           console.log({ x: e.genre_ids, y: selected });

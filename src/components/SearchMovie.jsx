@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from "react";
-import "magnific-popup";
 import axios from "axios";
-import Movie from "./Movie";
+import "magnific-popup";
+import React, { useEffect, useState } from "react";
+import Pagination from "./Pagination";
 
 const imgPath = "https://image.tmdb.org/t/p/original";
 const SearchMovie = () => {
   const [data, setData] = useState([]);
   const [query, setQuery] = useState("");
-  const URL = `https://api.themoviedb.org/3/search/movie?api_key=b9590de348b1de72934da4fdd68b6f97&language=fr-FR&query=${query}`;
+  const [totalPages, settotalPages] = useState(0);
+  const [page, setcurrentPage] = useState(1);
+
+  const URL = `https://api.themoviedb.org/3/search/movie?api_key=b9590de348b1de72934da4fdd68b6f97&language=fr-FR&query=${query}&page=${page}`;
   useEffect(() => {
-    axios.get(URL).then((res) => setData(res.data.results));
-  }, [query]);
+    axios.get(URL).then((res) => {
+      setData(res.data.results);
+
+      settotalPages(res?.data?.total_pages)
+    });
+  }, [query, page]);
 
   const onSearch = (event) => {
     setQuery(event.target.value);
@@ -49,7 +56,7 @@ const SearchMovie = () => {
                       src={
                         m.poster_path
                           ? "https://image.tmdb.org/t/p/original" +
-                            m.poster_path
+                          m.poster_path
                           : "https://films.lynetp.com/wp-content/uploads/2022/12/not-found-215-320.jpg"
                       }
                       alt="image du film"
@@ -83,6 +90,8 @@ const SearchMovie = () => {
               </div>
             ))}
           </ul>
+          <Pagination totalPages={totalPages} currentPage={page} onSelect={(selectedPage) => { setcurrentPage(selectedPage) }} />
+
         </div>
       ) : (
         <div className="placeholder-container">

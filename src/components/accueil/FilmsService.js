@@ -23,11 +23,17 @@ const getPopMovies = async () => {
   return result?.data?.results || [];
 };
 
-export const getMoviesByCat = async (with_genres) => {
+export const getMoviesByCat = async (with_genres, page = 1) => {
   if (with_genres.length == 0) return [];
-  const result = await axios.get(`${URL_GET_CAT}${with_genres.join(",")}`);
-  console.log("result:", result.data.results);
-  return result?.data?.results || [];
+  const {
+    data: {
+      results: data = [],
+      total_pages = 0,
+      total_results = 0,
+      page: currentPage = 1,
+    },
+  } = await axios.get(`${URL_GET_CAT}${with_genres.join(",")}&page=${page}`);
+  return { data, total_pages, total_results, currentPage };
 };
 export const getMoviesBySearch = async (with_search) => {
   const result = await axios.get(`${URL_GET_CAT}${with_search.join(",")}`);
